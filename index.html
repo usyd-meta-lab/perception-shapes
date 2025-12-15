@@ -1,0 +1,1770 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="tempImageYqWsZJ.ico" />
+    <title>Perception Shapes</title>
+    <link rel="stylesheet" href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" />
+    <link rel="stylesheet" href="" />
+    <script src="https://unpkg.com/jspsych@7.3.4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3/dist/index.browser.min.js"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-canvas-keyboard-response@1.1.3/dist/index.browser.min.js"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4/dist/index.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/usyd-meta-lab/jsPsychConfidenceRating@main/plugin-confidence-rating.js"></script>
+  </head>
+  <body>
+    <div id="jspsych"></div>
+    <script type="module">
+      const experiment = {
+  "schema_version": "1.0",
+  "meta": {
+    "title": "Perception Shapes",
+    "description": "",
+    "seed": 1
+  },
+  "resources": {
+    "jspsychAssets": []
+  },
+  "nodes": [
+    {
+      "id": "trial-1",
+      "kind": "trial",
+      "plugin": "html-keyboard-response",
+      "params": {
+        "stimulus": "<p><span style=\"font-size: 188px\">+</span><br></p>",
+        "choices": "ALL_KEYS",
+        "trial_duration": 500,
+        "response_ends_trial": true
+      },
+      "name": "Fixation",
+      "label": "Fixation"
+    },
+    {
+      "id": "trial-2",
+      "kind": "trial",
+      "plugin": "canvas-keyboard-response",
+      "params": {
+        "choices": "NO_KEYS",
+        "trial_duration": 500,
+        "response_ends_trial": true,
+        "canvas_size": [
+          350,
+          750
+        ],
+        "canvas_background_color": "#ffffff",
+        "stimulus": {
+          "__builderType": "function",
+          "source": "function draw(canvas) {\n  const ctx = canvas.getContext('2d');\n  \n  const width = canvas.width;\n  const height = canvas.height;\n  \n  // Clear with white background\n  ctx.fillStyle = '#ffffff';\n  ctx.fillRect(0, 0, width, height);\n  \n  const panelWidth = 300;\n  const panelHeight = 300;\n  const gap = 5;\n  \n  const leftX = (width/2) - panelWidth - (gap/2);\n  const rightX = (width/2) + (gap/2);\n  const panelY = (height/2) - (panelHeight/2);\n  \n  // Get brightness from window (set in On Load)\n  const leftBrightness = window.leftBrightness || 200;\n  const rightBrightness = window.rightBrightness || 255;\n  \n  function drawLinesPanel(x, y, width, height, brightness) {\n    ctx.fillStyle = '#000000';\n    ctx.fillRect(x, y, width, height);\n    \n   // Add blue border\n  ctx.strokeStyle = '#0000FF';  // Blue color\n  ctx.lineWidth = 5;             // Border thickness\n  ctx.strokeRect(x, y, width, height);\n  \n    ctx.strokeStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;\n    ctx.lineWidth = 2;\n    \n    const numLines = 12;\n    for (let i = 0; i < numLines; i++) {\n      ctx.beginPath();\n      const x1 = x + Math.random() * width;\n      const y1 = y + Math.random() * height;\n      const x2 = x + Math.random() * width;\n      const y2 = y + Math.random() * height;\n      ctx.moveTo(x1, y1);\n      ctx.lineTo(x2, y2);\n      ctx.stroke();\n    }\n  }\n  \n  drawLinesPanel(leftX, panelY, panelWidth, panelHeight, leftBrightness);\n  drawLinesPanel(rightX, panelY, panelWidth, panelHeight, rightBrightness);\n}"
+        },
+        "on_load": {
+          "__builderType": "function",
+          "source": "// Set brightness for this trial\nconst brightnessConfig = getCurrentBrightness();\nwindow.leftBrightness = brightnessConfig.leftBrightness;\nwindow.rightBrightness = brightnessConfig.rightBrightness;\nwindow.correctAnswer = brightnessConfig.correctAnswer;\n\nconsole.log('Left:', window.leftBrightness, 'Right:', window.rightBrightness, 'Correct:', window.correctAnswer);"
+        }
+      },
+      "name": "Stimulus",
+      "label": "Stimulus"
+    },
+    {
+      "id": "trial-3",
+      "kind": "trial",
+      "plugin": "canvas-keyboard-response",
+      "params": {
+        "choices": [
+          "f",
+          "j"
+        ],
+        "response_ends_trial": true,
+        "canvas_size": [
+          350,
+          750
+        ],
+        "canvas_background_color": "#ffffff",
+        "stimulus": {
+          "__builderType": "function",
+          "source": "function draw(canvas) {\n  const ctx = canvas.getContext('2d');\n  \n  // Canvas dimensions\n  const width = canvas.width;\n  const height = canvas.height;\n  \n  // Clear canvas with white background\n  ctx.fillStyle = '#ffffff';\n  ctx.fillRect(0, 0, width, height);\n  \n  // Panel configuration\n  const panelWidth = 300;\n  const panelHeight = 300;\n  const gap = 5;\n  \n  // Center the panels horizontally and vertically\n  const leftX = (width/2) - panelWidth - (gap/2);\n  const rightX = (width/2) + (gap/2);\n  const panelY = (height/2) - (panelHeight/2);\n  \n  // Get brightness values from timeline variables\n  // Default to 180 and 200 if not specified\n  const leftBrightness = typeof window.leftBrightness !== 'undefined' \n    ? window.leftBrightness \n    : 180;\n  const rightBrightness = typeof window.rightBrightness !== 'undefined' \n    ? window.rightBrightness \n    : 200;\n  \n  // Helper function to draw a panel with random lines\n  function drawLinesPanel(x, y, width, height, brightness) {\n    // Black background\n    ctx.fillStyle = '#000000';\n    ctx.fillRect(x, y, width, height);\n    \n    // Set line color based on brightness (grayscale)\n    ctx.strokeStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;\n    ctx.lineWidth = 2;\n    \n  // Add blue border\n  ctx.strokeStyle = '#0000FF';  // Blue color\n  ctx.lineWidth = 5;             // Border thickness\n  ctx.strokeRect(x, y, width, height);\n  \n    // Draw random lines (12 lines per panel)\n    const numLines = 0;\n    for (let i = 0; i < numLines; i++) {\n      ctx.beginPath();\n      const x1 = x + Math.random() * width;\n      const y1 = y + Math.random() * height;\n      const x2 = x + Math.random() * width;\n      const y2 = y + Math.random() * height;\n      ctx.moveTo(x1, y1);\n      ctx.lineTo(x2, y2);\n      ctx.stroke();\n    }\n  }\n  \n  // Draw both panels\n  drawLinesPanel(leftX, panelY, panelWidth, panelHeight, leftBrightness);\n   drawLinesPanel(rightX, panelY, panelWidth, panelHeight, rightBrightness);\n}"
+        },
+        "on_load": {
+          "__builderType": "function",
+          "source": "// Set brightness for this trial\nconst brightnessConfig = getCurrentBrightness();\nwindow.leftBrightness = brightnessConfig.leftBrightness;\nwindow.rightBrightness = brightnessConfig.rightBrightness;\nwindow.correctAnswer = brightnessConfig.correctAnswer;\n\nconsole.log('Left:', window.leftBrightness, 'Right:', window.rightBrightness, 'Correct:', window.correctAnswer);\n\n// Staircase state - global variables\nconsole.log(window.staircase)"
+        },
+        "on_finish": {
+          "__builderType": "function",
+          "source": "// Get the participant's response\nconst response = jsPsych.data.get().last(1).values()[0];\n\nconst participantAnswer = response.response;\nconst wasCorrect = participantAnswer === window.correctAnswer;\n\n// Update the staircase\nupdateStaircase(wasCorrect);\n\n// Save the response for the next trial's visual feedback\nwindow.lastResponse = participantAnswer;\n\n// Add staircase data to this trial's data\njsPsych.data.get().last(1).values()[0].correct = wasCorrect;\njsPsych.data.get().last(1).values()[0].brightness = staircase.brightness;\njsPsych.data.get().last(1).values()[0].leftBrightness = window.leftBrightness;\njsPsych.data.get().last(1).values()[0].rightBrightness = window.rightBrightness;"
+        }
+      },
+      "name": "Response",
+      "label": "Response"
+    },
+    {
+      "id": "trial-5",
+      "kind": "trial",
+      "plugin": "canvas-keyboard-response",
+      "params": {
+        "choices": "NO_KEYS",
+        "trial_duration": 500,
+        "response_ends_trial": true,
+        "canvas_size": [
+          305,
+          605
+        ],
+        "canvas_background_color": "#ffffff",
+        "stimulus": {
+          "__builderType": "function",
+          "source": "function draw(canvas) {\n  const ctx = canvas.getContext('2d');\n  \n  // Canvas dimensions\n  const width = canvas.width;\n  const height = canvas.height;\n  \n  // Clear canvas with white background\n  ctx.fillStyle = '#CBC9C3';\n  ctx.fillRect(0, 0, width, height);\n  \n  // Panel configuration\n  const panelWidth = 300;\n  const panelHeight = 300;\n  const gap = 5;\n  \n  // Center the panels horizontally and vertically\n  const leftX = (width/2) - panelWidth - (gap/2);\n  const rightX = (width/2) + (gap/2);\n  const panelY = (height/2) - (panelHeight/2);\n  \n  // Get brightness values from timeline variables\n  const leftBrightness = typeof window.leftBrightness !== 'undefined' \n    ? window.leftBrightness \n    : 180;\n  const rightBrightness = typeof window.rightBrightness !== 'undefined' \n    ? window.rightBrightness \n    : 200;\n  \n  // Get the previous response (if any)\n  const lastResponse = window.lastResponse || null;\n  \n  // Helper function to draw a panel with random lines\n  function drawLinesPanel(x, y, width, height, brightness, showBorder) {\n    if (showBorder) {\n      // Draw black background\n      ctx.fillStyle = '#000000';\n      ctx.fillRect(x, y, width, height);\n      \n      // Set line color based on brightness (grayscale)\n      ctx.strokeStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;\n      ctx.lineWidth = 2;\n      \n      // Add blue border\n      ctx.strokeStyle = '#0000FF';\n      ctx.lineWidth = 5;\n      ctx.strokeRect(x, y, width, height);\n    } else {\n      // No border - blend into white background\n      ctx.fillStyle = '#CBC9C3';\n      ctx.fillRect(x, y, width, height);\n    }\n    \n    // Draw random lines (currently set to 0)\n    const numLines = 0;\n    for (let i = 0; i < numLines; i++) {\n      ctx.beginPath();\n      const x1 = x + Math.random() * width;\n      const y1 = y + Math.random() * height;\n      const x2 = x + Math.random() * width;\n      const y2 = y + Math.random() * height;\n      ctx.moveTo(x1, y1);\n      ctx.lineTo(x2, y2);\n      ctx.stroke();\n    }\n  }\n  \n  // Determine which panel gets the border based on last response\n  const showLeftBorder = lastResponse === 'f';\n  const showRightBorder = lastResponse === 'j';\n  \n  // Draw both panels\n  drawLinesPanel(leftX, panelY, panelWidth, panelHeight, leftBrightness, showLeftBorder);\n  drawLinesPanel(rightX, panelY, panelWidth, panelHeight, rightBrightness, showRightBorder);\n}"
+        },
+        "on_load": {
+          "__builderType": "function",
+          "source": "// Set brightness for this trial\nconst brightnessConfig = getCurrentBrightness();\nwindow.leftBrightness = brightnessConfig.leftBrightness;\nwindow.rightBrightness = brightnessConfig.rightBrightness;\nwindow.correctAnswer = brightnessConfig.correctAnswer;\n\nconsole.log('Left:', window.leftBrightness, 'Right:', window.rightBrightness, 'Correct:', window.correctAnswer);"
+        }
+      },
+      "name": "Visual Feedback",
+      "label": "Visual Feedback"
+    },
+    {
+      "id": "trial-4",
+      "kind": "trial",
+      "plugin": "generic",
+      "params": {},
+      "pluginScriptPath": "https://cdn.jsdelivr.net/gh/usyd-meta-lab/jsPsychConfidenceRating@main/plugin-confidence-rating.js",
+      "pluginTypeName": "jsPsychConfidenceRating",
+      "genericTrialCode": "{\n    prompt: `<strong>Rate your confidence:</strong>`,\n    tick_labels: [\"Guessing\", \"\", \"\", \"\", \"\",\"Certain\"],\n    n_points: 6,          // any integer >= 2\n    require_response: true,\n    button_label: \"Submit\",\n    width_px: 980,\n    track_height_px: 34,\n    block_bg: \"white\"\n  }",
+      "name": "Confidence Rating",
+      "label": "Confidence Rating"
+    },
+    {
+      "id": "trial-6",
+      "kind": "trial",
+      "plugin": "instructions",
+      "params": {
+        "response_ends_trial": true,
+        "pages": [
+          "<h1>Experiment Instructions</h1>\n<p>In this experiment, you will see two black panels side-by-side, each containing random white lines. The lines in each panel may appear at different brightness levels.</p>\n<p>Your task is to decide which panel has brighter lines. Each trial begins with a fixation cross (+) followed by a brief flash of the two panels. Press 'F' if the left panel has brighter lines, or press 'J' if the right panel has brighter lines.</p>\n<p>The panels will appear very briefly, so pay close attention. After you respond, a blue border will highlight your choice. The difficulty will adjust based on your performance, so try to respond as accurately as possible.</p>\n<p><strong>Remember: F = Left panel brighter | J = Right panel brighter</strong></p>\n<p>Click \"Continue\" when you're ready to begin.</p>"
+        ],
+        "show_clickable_nav": true,
+        "allow_backward": false,
+        "allow_keys": true,
+        "button_label_next": "Continue"
+      },
+      "name": "Instructions 1",
+      "label": "Instructions 1"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "trial-6",
+      "name": "Instructions 1",
+      "timeline": [
+        "trial-6"
+      ]
+    },
+    {
+      "id": "block-1",
+      "name": "Perception Shapes Trial",
+      "timeline": [
+        "trial-1",
+        "trial-2",
+        "trial-3",
+        "trial-5",
+        "trial-4"
+      ],
+      "repetitions": 270
+    }
+  ],
+  "options": {
+    "rawJs": "// Staircase state - global variables\nwindow.staircase = {\n  brightness: 200,\n  minBrightness: 128,\n  maxBrightness: 256,\n  correctCount1: 0,\n  correctCount2: 0,\n  currentStaircase: 1,\n  trialCount: 0\n};\n\n// Update brightness based on accuracy\nwindow.updateStaircase = function(wasCorrect) {\n  window.staircase.trialCount++;\n  \n  if (wasCorrect) {\n    if (window.staircase.currentStaircase === 1) {\n      window.staircase.correctCount1++;\n      if (window.staircase.correctCount1 >= 2) {\n        window.staircase.brightness -= 2;\n        window.staircase.correctCount1 = 0;\n      }\n    } else {\n      window.staircase.correctCount2++;\n      if (window.staircase.correctCount2 >= 3) {\n        window.staircase.brightness -= 3;\n        window.staircase.correctCount2 = 0;\n      }\n    }\n  } else {\n    window.staircase.brightness += 4;\n    window.staircase.correctCount1 = 0;\n    window.staircase.correctCount2 = 0;\n  }\n  \n  window.staircase.brightness = Math.max(\n    window.staircase.minBrightness, \n    Math.min(window.staircase.maxBrightness, window.staircase.brightness)\n  );\n  \n  window.staircase.currentStaircase = window.staircase.currentStaircase === 1 ? 2 : 1;\n  \n  console.log('Trial ' + window.staircase.trialCount + ': Brightness = ' + window.staircase.brightness + ', Correct = ' + wasCorrect);\n};\n\n// Get current brightness values\nwindow.getCurrentBrightness = function() {\n  const baseBrightness = 255;\n  const difference = window.staircase.brightness;\n  \n  const brighterOnLeft = Math.random() < 0.5;\n  \n  return {\n    leftBrightness: brighterOnLeft ? baseBrightness : difference,\n    rightBrightness: brighterOnLeft ? difference : baseBrightness,\n    correctAnswer: brighterOnLeft ? 'f' : 'j'\n  };\n};",
+    "rawCss": "",
+    "headInjection": "",
+    "fullscreen": false,
+    "osfSave": false,
+    "osfProjectUrl": "",
+    "osfApiToken": "",
+    "sona": false,
+    "sonaExperimentId": "",
+    "sonaCreditToken": "",
+    "prolific": false,
+    "prolificRedirectCode": "",
+    "localSave": true,
+    "urlParams": "",
+    "variables": []
+  }
+};
+      const pluginMap = {
+        "html-keyboard-response": jsPsychHtmlKeyboardResponse,
+        "canvas-keyboard-response": jsPsychCanvasKeyboardResponse,
+        "instructions": jsPsychInstructions
+      };
+
+      function hydrate(input) {
+        if (Array.isArray(input)) return input.map(hydrate);
+        if (input && typeof input === "object") {
+          const hydrated = { ...input };
+          if (typeof hydrated.type === "string" && pluginMap[hydrated.type]) {
+            hydrated.type = pluginMap[hydrated.type];
+          }
+          for (const key of Object.keys(hydrated)) {
+            // Skip hydrating function properties to preserve conditional_function
+            if (typeof hydrated[key] === "function") continue;
+            hydrated[key] = hydrate(hydrated[key]);
+          }
+          return hydrated;
+        }
+        return input;
+      }
+
+      function applyCustomCss(css) {
+        let style = document.getElementById('jspsych-builder-style');
+        const content = typeof css === 'string' ? css : '';
+        if (!content.trim()) {
+          if (style) style.remove();
+          return;
+        }
+        if (!style) {
+          style = document.createElement('style');
+          style.id = 'jspsych-builder-style';
+          document.head.appendChild(style);
+        }
+        style.textContent = content;
+      }
+
+      async function injectCustomHead(html) {
+        const content = typeof html === 'string' ? html : '';
+        if (!content.trim()) return;
+        const container = document.createElement('div');
+        container.innerHTML = content.trim();
+        const elements = Array.from(container.children);
+
+        // Process scripts sequentially and wait for each to load
+        for (const element of elements) {
+          if (element.tagName === 'SCRIPT') {
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              Array.from(element.attributes).forEach(attr => {
+                script.setAttribute(attr.name, attr.value);
+              });
+
+              if (element.src) {
+                script.src = element.src;
+                script.onload = resolve;
+                script.onerror = () => {
+                  console.warn('Failed to load script:', element.src);
+                  resolve(); // Continue even if script fails
+                };
+              } else {
+                script.textContent = element.textContent;
+                resolve();
+              }
+              document.head.appendChild(script);
+
+              // If no src, resolve immediately after appending
+              if (!element.src) {
+                resolve();
+              }
+            });
+          } else if (element.tagName === 'LINK' || element.tagName === 'STYLE' || element.tagName === 'META') {
+            document.head.appendChild(element.cloneNode(true));
+          }
+        }
+      }
+
+      function makeSeededRng(seed) {
+        let s = (seed ?? Date.now()) >>> 0;
+        return function () {
+          s += 0x6D2B79F5;
+          let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function shuffle(arr, rng) {
+        for (let i = arr.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(rng() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      function clone(value) {
+        return JSON.parse(JSON.stringify(value));
+      }
+
+      const GLOBAL_OBJECT = typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : {});
+      const ROW_CONTEXT_KEY = "__builderTimelineRow";
+      const TEMPLATE_PATTERN = /{{\s*([^}]+?)\s*}}/g;
+      const rowContextStack = [];
+
+      function coerceExperimentVariableValue(raw) {
+        if (typeof raw !== "string") return raw;
+        const trimmed = raw.trim();
+        if (!trimmed.length) return "";
+        if (trimmed === "true") return true;
+        if (trimmed === "false") return false;
+        if (trimmed === "null") return null;
+        if (trimmed === "undefined") return undefined;
+        if (/^-?\d+(\.\d+)?$/.test(trimmed)) {
+          const parsed = Number(trimmed);
+          if (!Number.isNaN(parsed)) return parsed;
+        }
+        if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
+          try {
+            return JSON.parse(trimmed);
+          } catch (err) {
+            return raw;
+          }
+        }
+        if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+          return trimmed.slice(1, -1);
+        }
+        return raw;
+      }
+
+      function applyExperimentVariables(vars) {
+        if (!Array.isArray(vars)) return;
+        vars.forEach(entry => {
+          const name = typeof entry?.name === "string" ? entry.name.trim() : "";
+          if (!name) return;
+
+          let value;
+          if (entry.randomize && typeof entry.value === "string") {
+            // Parse comma-separated values and randomly select one
+            const options = entry.value.split(',').map(v => v.trim()).filter(v => v.length > 0);
+            if (options.length > 0) {
+              const randomIndex = Math.floor(Math.random() * options.length);
+              value = coerceExperimentVariableValue(options[randomIndex]);
+            } else {
+              value = coerceExperimentVariableValue(entry.value);
+            }
+          } else {
+            value = coerceExperimentVariableValue(entry.value);
+          }
+
+          try {
+            GLOBAL_OBJECT[name] = value;
+          } catch (err) {
+            console.warn('Could not set experiment variable', name, err);
+          }
+        });
+      }
+
+      function pushRowContext(row) {
+        rowContextStack.push(GLOBAL_OBJECT[ROW_CONTEXT_KEY] ?? null);
+        GLOBAL_OBJECT[ROW_CONTEXT_KEY] = row ?? null;
+      }
+
+      function popRowContext() {
+        const previous = rowContextStack.length ? rowContextStack.pop() : null;
+        GLOBAL_OBJECT[ROW_CONTEXT_KEY] = previous ?? null;
+      }
+
+      function withRowContext(row, fn) {
+        if (typeof fn !== "function") {
+          return () => {};
+        }
+        return function (...args) {
+          const previous = GLOBAL_OBJECT[ROW_CONTEXT_KEY] ?? null;
+          GLOBAL_OBJECT[ROW_CONTEXT_KEY] = row ?? null;
+          try {
+            return fn.apply(this, args);
+          } finally {
+            GLOBAL_OBJECT[ROW_CONTEXT_KEY] = previous;
+          }
+        };
+      }
+
+      function wrapOnStart(row, fn) {
+        return function (...args) {
+          // Replace Firebase URLs in row data with blob URLs
+          const processedRow = blobUrlCache.size > 0 ? replaceUrlsWithBlobs(row) : row;
+          pushRowContext(processedRow);
+          if (typeof fn === "function") {
+            return fn.apply(this, args);
+          }
+        };
+      }
+
+      function wrapOnFinish(row, fn) {
+        return function (...args) {
+          try {
+            return typeof fn === "function" ? fn.apply(this, args) : undefined;
+          } finally {
+            popRowContext();
+          }
+        };
+      }
+
+      function parseTemplatePath(token) {
+        if (typeof token !== "string") return [];
+        return token
+          .replace(/\[(\w+)\]/g, '.\$1')
+          .split(".")
+          .map(part => part.trim())
+          .filter(Boolean);
+      }
+
+      function resolveTimelinePath(row, segments) {
+        if (!Array.isArray(segments) || !segments.length) return undefined;
+        let current = row;
+        for (const segment of segments) {
+          if (current === null || current === undefined) return undefined;
+          const key = /^\d+$/.test(segment) ? Number(segment) : segment;
+          current = current[key];
+        }
+        return current;
+      }
+
+      function renderTimelineTemplate(text, row) {
+        if (typeof text !== "string" || text.indexOf("{{") === -1 || !row) return text;
+        TEMPLATE_PATTERN.lastIndex = 0;
+        return text.replace(TEMPLATE_PATTERN, (_, token) => {
+          const segments = parseTemplatePath(token);
+          const resolved = resolveTimelinePath(row, segments);
+          if (resolved === undefined || resolved === null) return "";
+          return String(resolved);
+        });
+      }
+
+      function prepareTimelineRows(config, rng) {
+        if (!config) return [];
+        const rows = Array.isArray(config.rows) ? config.rows.map(clone) : [];
+        if (!rows.length) return [];
+        let orderRaw = typeof config.order === "string" ? config.order : ""
+        if (!orderRaw && (config.withReplacement || config.sampling?.withReplacement)) orderRaw = "random-with-replacement";
+        if (!orderRaw && config.sampling?.shuffle) orderRaw = "random";
+        if (!orderRaw) orderRaw = "sequential";
+        const order = orderRaw === "random" || orderRaw === "random-with-replacement" || orderRaw === "sequential"
+          ? orderRaw
+          : "sequential";
+        let sampleRaw = null;
+        for (const candidate of [config.sampleSize, config.sample, config.sampling?.count, config.sampling?.size]) {
+          const num = Number(candidate);
+          if (Number.isFinite(num) && num >= 1) {
+            sampleRaw = num;
+            break;
+          }
+        }
+        const sampleSize = Number.isFinite(sampleRaw) && sampleRaw >= 1 ? Math.max(1, Math.round(sampleRaw)) : null;
+        const samplingMode = config.samplingMode || "default";
+        if (samplingMode === "frequency" && Array.isArray(config.frequencies) && config.frequencies.length === rows.length) {
+          const expanded = [];
+          for (let i = 0; i < rows.length; i += 1) {
+            const freq = Math.max(0, Math.round(config.frequencies[i] || 0));
+            for (let j = 0; j < freq; j += 1) {
+              expanded.push(clone(rows[i]));
+            }
+          }
+          if (order === "random" || order === "random-with-replacement") {
+            shuffle(expanded, rng);
+          }
+          if (sampleSize && sampleSize < expanded.length) {
+            return expanded.slice(0, sampleSize);
+          }
+          return expanded;
+        }
+        if (samplingMode === "weighted" && Array.isArray(config.weights) && config.weights.length === rows.length) {
+          const totalWeight = config.weights.reduce((sum, w) => sum + Math.max(0, w || 0), 0);
+          if (totalWeight > 0) {
+            const probabilities = config.weights.map(w => Math.max(0, w || 0) / totalWeight);
+            const count = sampleSize ?? rows.length;
+            const picks = [];
+            for (let i = 0; i < count; i += 1) {
+              const rand = rng();
+              let cumulative = 0;
+              for (let j = 0; j < probabilities.length; j += 1) {
+                cumulative += probabilities[j];
+                if (rand <= cumulative) {
+                  picks.push(clone(rows[j]));
+                  break;
+                }
+              }
+            }
+            return picks;
+          }
+        }
+        if (order === "random-with-replacement") {
+          const count = sampleSize ?? rows.length;
+          if (!rows.length) return [];
+          const picks = [];
+          for (let i = 0; i < count; i += 1) {
+            const index = Math.floor(rng() * rows.length);
+            picks.push(clone(rows[index]));
+          }
+          return picks;
+        }
+        let working = order === "random" ? shuffle(rows.slice(), rng) : rows.slice();
+        if (sampleSize && sampleSize < working.length) {
+          working = working.slice(0, sampleSize);
+        }
+        return working;
+      }
+
+      function reviveFunction(source) {
+        if (typeof source !== "string" || !source.trim()) return null;
+        try {
+          const trimmed = source.trim();
+          try {
+            const fn = (0, eval)(`(${trimmed})`);
+            if (typeof fn === "function") return fn;
+          } catch (e) {}
+          const isFunctionLike = /^(\(.*?\)\s*=>|\bfunction\s*\(|^\([^)]*\)\s*=>)/.test(trimmed);
+          if (isFunctionLike) {
+            console.warn("Could not evaluate function:", trimmed);
+            return null;
+          }
+          const wrappedFn = new Function("data", trimmed);
+          return wrappedFn;
+        } catch (err) {
+          console.warn("Could not evaluate custom function:", err, "Source:", source);
+          return null;
+        }
+      }
+
+      function reviveFunctionWithGlobals(source, globalVarNames = []) {
+        if (typeof source !== "string" || !source.trim()) return null;
+        if (!Array.isArray(globalVarNames) || globalVarNames.length === 0) {
+          return reviveFunction(source);
+        }
+        try {
+          const trimmed = source.trim();
+          const isFunctionLike = /^(\(.*?\)\s*=>|\bfunction\s*\(|^\([^)]*\)\s*=>)/.test(trimmed);
+          const params = globalVarNames.join(", ");
+          return function(...args) {
+            const globalObj = typeof window !== "undefined" ? window : globalThis;
+            const globalValues = globalVarNames.map(name => globalObj[name]);
+            let result;
+            if (isFunctionLike) {
+              const factory = new Function(params, `return ${trimmed};`);
+              const fn = factory(...globalValues);
+              result = typeof fn === "function" ? fn(...args) : fn;
+            } else {
+              const fn = new Function(params, `return ${trimmed};`);
+              result = fn(...globalValues);
+            }
+            return result;
+          };
+        } catch (err) {
+          console.warn("Could not evaluate custom function with globals:", err, "Source:", source);
+          return reviveFunction(source);
+        }
+      }
+
+      function reviveData(value, row) {
+        if (!value) return null;
+        if (Array.isArray(value)) return clone(value);
+        if (value && typeof value === "object") {
+          if (value.__builderType === "data") {
+            const source = typeof value.source === "string" ? value.source : "";
+            if (!source.trim()) return {};
+            try {
+              const hasReturn = /\breturn\b/.test(source);
+              const factory = new Function(
+                "jsPsych",
+                "row",
+                hasReturn ? source : `return (${source});`
+              );
+              const jsPsychRef = typeof jsPsych !== "undefined" ? jsPsych : undefined;
+              const result = factory(jsPsychRef, row ?? {});
+              if (result === undefined || result === null) return {};
+              if (typeof result === "object") return result;
+              return { value: result };
+            } catch (err) {
+              console.warn("Could not evaluate custom data code:", err);
+              return {};
+            }
+          }
+          return clone(value);
+        }
+        return value;
+      }
+
+      function resolveParam(value, row) {
+        if (typeof value === "string") {
+          let result = row ? renderTimelineTemplate(value, row) : value;
+          if (result.indexOf("${") !== -1) {
+            try {
+              const escaped = result.replace(/\\/g, "\\\\").replace(/`/g, "\\`");
+              result = new Function(`return \`${escaped}\`;`).call(window);
+            } catch (e) {
+              console.warn("Template evaluation failed:", e);
+              console.warn("Failed template:", result);
+            }
+          }
+          return result;
+        }
+        if (Array.isArray(value)) return value.map(item => resolveParam(item, row));
+        if (value && typeof value === "object") {
+          if (value.__builderType === "function") {
+            const revived = reviveFunction(value.source) ?? (() => {});
+            return row ? withRowContext(row, revived) : revived;
+          }
+          if (value.__builderType === "data") {
+            return reviveData(value, row) ?? {};
+          }
+          if ("bind" in value) {
+            const segments = typeof value.bind === "string" ? parseTemplatePath(value.bind) : [];
+            return row ? resolveTimelinePath(row, segments) : undefined;
+          }
+          const output = {};
+          for (const key in value) {
+            output[key] = resolveParam(value[key], row);
+          }
+          return output;
+        }
+        return value;
+      }
+
+      function getTrialLabel(node) {
+        if (!node) return "";
+        const fromLabel = typeof node.label === "string" ? node.label.trim() : "";
+        if (fromLabel.length) {
+          return fromLabel;
+        }
+        const fromName = typeof node.name === "string" ? node.name.trim() : "";
+        if (fromName.length) {
+          return fromName;
+        }
+        return typeof node.id === "string" ? node.id : "";
+      }
+
+      function compileNode(id, map, row, globalVarNames = [], blockName = null) {
+        const node = map.get(id);
+        if (!node) throw new Error("Unknown node " + id);
+        if (node.kind === "trial") {
+          // Handle generic plugin specially
+          if (node.plugin === "generic") {
+            console.log("Processing generic plugin node:", node);
+            const genericCode = (node.genericTrialCode || '').trim();
+            const pluginTypeName = (node.pluginTypeName || '').trim();
+            console.log("Generic code:", genericCode);
+            console.log("Plugin type name:", pluginTypeName);
+            if (!genericCode) {
+              console.warn("Generic plugin trial has no code:", node.id);
+              return [];
+            }
+            if (!pluginTypeName) {
+              console.warn("Generic plugin trial has no type name:", node.id);
+              return [];
+            }
+            let params;
+            try {
+              const evaluator = new Function('return (' + genericCode + ');');
+              params = evaluator();
+            } catch (err) {
+              console.error("Failed to parse generic trial code:", err);
+              return [];
+            }
+            let pluginType;
+            try {
+              pluginType = window[pluginTypeName];
+              if (!pluginType) {
+                console.error("Plugin type not found in window:", pluginTypeName);
+                console.error("Available window properties:", Object.keys(window).filter(k => k.startsWith("jsP")));
+                return [];
+              }
+              console.log("Successfully resolved plugin type:", pluginTypeName, pluginType);
+            } catch (err) {
+              console.error("Failed to resolve plugin type:", pluginTypeName, err);
+              return [];
+            }
+            const compiled = { type: pluginType, ...params };
+            console.log("Generic plugin compiled trial:", compiled);
+            const conditional = resolveTimelineFunction(node.conditional_function ?? node.conditionalFunction, globalVarNames);
+            if (conditional) {
+              compiled.conditional_function = conditional;
+            }
+            return [compiled];
+          }
+
+          const params = {};
+          for (const key in node.params || {}) {
+            params[key] = resolveParam(node.params[key], row);
+          }
+          const baseData = node.data ? reviveData(node.data, row ?? {}) : null;
+          const rowData = row ? clone(row) : null;
+          const data = rowData
+            ? { ...(baseData && typeof baseData === "object" ? baseData : {}), ...rowData }
+            : baseData && typeof baseData === "object" ? baseData : {};
+          if (data && typeof data === "object") {
+            const trialLabel = getTrialLabel(node);
+            if (trialLabel.length && !Object.prototype.hasOwnProperty.call(data, "trial_label")) {
+              data.trial_label = trialLabel;
+            }
+            if (blockName && !Object.prototype.hasOwnProperty.call(data, "block_name")) {
+              data.block_name = blockName;
+            }
+          }
+          const compiled = { type: node.plugin, ...params, data };
+          // Special handling for preload plugin to cache blobs
+          if (node.plugin === "preload") {
+            const urlsToCache = [];
+            if (Array.isArray(compiled.images)) urlsToCache.push(...compiled.images);
+            if (Array.isArray(compiled.audio)) urlsToCache.push(...compiled.audio);
+            if (Array.isArray(compiled.video)) urlsToCache.push(...compiled.video);
+            if (urlsToCache.length > 0) {
+              // Start caching immediately when preload starts
+              const existingOnLoad = compiled.on_load;
+              compiled.on_load = async function() {
+                console.log('[Blob Cache] Preload trial loading, starting blob cache for', urlsToCache.length, 'URLs');
+                console.log('[Blob Cache] URLs to cache:', urlsToCache);
+                // Start caching in background (don't await here, let it run during preload)
+                preloadAndCacheAsBlob(urlsToCache).then(() => {
+                  console.log('[Blob Cache] Blob caching complete. Cache size:', blobUrlCache.size);
+                  console.log('[Blob Cache] URLs in cache (keys):', Array.from(blobUrlCache.keys()));
+                  console.log('[Blob Cache] Blob URLs (values):', Array.from(blobUrlCache.values()));
+                  applyBlobCacheToTrackedTrials();
+                });
+                if (typeof existingOnLoad === 'function') {
+                  return existingOnLoad.call(this);
+                }
+              };
+              // Also add on_finish to ensure caching is complete before continuing
+              const existingOnFinish = compiled.on_finish;
+              compiled.on_finish = async function(data) {
+                console.log('[Blob Cache] Preload trial finished, ensuring all blobs are cached');
+                // Wait for any remaining blobs to finish
+                await preloadAndCacheAsBlob(urlsToCache);
+                console.log('[Blob Cache] Final cache size:', blobUrlCache.size);
+                applyBlobCacheToTrackedTrials();
+                if (typeof existingOnFinish === 'function') {
+                  return existingOnFinish.call(this, data);
+                }
+              };
+            }
+          }
+          if (rowData) {
+            compiled._builderRow = rowData;
+            compiled.on_start = wrapOnStart(rowData, compiled.on_start);
+            compiled.on_finish = wrapOnFinish(rowData, compiled.on_finish);
+            if (typeof compiled.on_load === "function") {
+              compiled.on_load = withRowContext(rowData, compiled.on_load);
+            }
+            if (typeof compiled.on_stimulus_render === "function") {
+              compiled.on_stimulus_render = withRowContext(rowData, compiled.on_stimulus_render);
+            }
+          }
+          const conditional = resolveTimelineFunction(node.conditional_function ?? node.conditionalFunction, globalVarNames);
+          if (conditional) {
+            compiled.conditional_function = rowData ? withRowContext(rowData, conditional) : conditional;
+          }
+          return [compiled];
+        }
+        return [];
+      }
+
+      function compileTrialsSequence(ids, map, row, globalVarNames = [], blockName = null) {
+        const results = [];
+        if (!Array.isArray(ids)) return results;
+        ids.forEach(entry => {
+          const id = typeof entry === "string" ? entry : entry && typeof entry === "object" ? entry.id : null;
+          if (!id) return;
+          let compiledNodes = compileNode(id, map, row, globalVarNames, blockName);
+          if (!Array.isArray(compiledNodes) || compiledNodes.length === 0) {
+            return;
+          }
+          if (entry && typeof entry === "object") {
+            const conditionalOverride = resolveTimelineFunction(
+              entry.conditional_function ?? entry.conditionalFunction ?? entry.conditional,
+              globalVarNames
+            );
+            if (conditionalOverride) {
+              compiledNodes = compiledNodes.map(node => {
+                const existing = typeof node.conditional_function === "function" ? node.conditional_function : null;
+                const rowData = node._builderRow ?? null;
+                const scopedOverride = rowData ? withRowContext(rowData, conditionalOverride) : conditionalOverride;
+                if (existing) {
+                  node.conditional_function = function (...args) {
+                    const shouldRun = existing.apply(this, args);
+                    if (!shouldRun) return false;
+                    return scopedOverride.apply(this, args);
+                  };
+                } else {
+                  node.conditional_function = scopedOverride;
+                }
+                return node;
+              });
+            }
+          }
+          results.push(...compiledNodes);
+        });
+        return results;
+      }
+
+      function resolveTimelineFunction(value, globalVarNames = []) {
+        if (!value) return undefined;
+        if (value.__builderType === "function") {
+          return reviveFunctionWithGlobals(value.source, globalVarNames) ?? undefined;
+        }
+        if (typeof value === "string") {
+          return reviveFunctionWithGlobals(value, globalVarNames) ?? undefined;
+        }
+        return undefined;
+      }
+
+      function compileExperiment(config) {
+        const rng = makeSeededRng(config.meta?.seed);
+        const map = new Map(config.nodes.map(node => [node.id, node]));
+        const globalVarNames = [];
+        if (config.options && Array.isArray(config.options.variables)) {
+          config.options.variables.forEach(v => {
+            const name = typeof v?.name === "string" ? v.name.trim() : "";
+            if (name) globalVarNames.push(name);
+          });
+        }
+        console.log('[Survey Flow] compileExperiment - received blocks:',
+          config.blocks?.map(b => ({
+            id: b.id,
+            name: b.name,
+            timeline: b.timeline
+          }))
+        );
+        const timeline = [];
+        const blocks = Array.isArray(config.blocks) ? config.blocks : [];
+        for (const block of blocks) {
+          if (!block || typeof block !== "object") continue;
+          const repetitionsRaw = typeof block.repetitions === "number" ? block.repetitions : parseFloat(block.repetitions);
+          const repetitions = Number.isFinite(repetitionsRaw) && repetitionsRaw >= 1 ? Math.max(1, Math.round(repetitionsRaw)) : 1;
+          const conditionalFn = resolveTimelineFunction(block.conditional_function ?? block.conditionalFunction, globalVarNames);
+          const onStartFn = resolveTimelineFunction(block.on_timeline_start ?? block.onTimelineStart, globalVarNames);
+          const onFinishFn = resolveTimelineFunction(block.on_timeline_finish ?? block.onTimelineFinish, globalVarNames);
+          if (block.table && block.root) {
+            const rows = prepareTimelineRows(block.table, rng);
+            const blockName = block.name || null;
+            rows.forEach(row => {
+              const sequence = compileNode(block.root, map, row, globalVarNames, blockName);
+              if (!sequence.length) return;
+              if (sequence.length === 1 && !conditionalFn && !onStartFn && !onFinishFn && repetitions <= 1) {
+                timeline.push(...sequence);
+              } else {
+                const entry = { timeline: sequence };
+                if (repetitions > 1) entry.repetitions = repetitions;
+                if (onStartFn) entry.on_timeline_start = withRowContext(row, onStartFn);
+                if (onFinishFn) entry.on_timeline_finish = withRowContext(row, onFinishFn);
+                if (conditionalFn) entry.conditional_function = withRowContext(row, conditionalFn);
+                timeline.push(entry);
+              }
+            });
+            continue;
+          }
+          if (block.table && Array.isArray(block.timeline) && block.timeline.length) {
+            const rows = prepareTimelineRows(block.table, rng);
+            const blockName = block.name || null;
+            rows.forEach(row => {
+              const sequence = compileTrialsSequence(block.timeline, map, row, globalVarNames, blockName);
+              if (!sequence.length) return;
+              // Wrap each trial with conditional_function in its own timeline
+              const processedSequence = sequence.map(trial => {
+                if (typeof trial.conditional_function === 'function') {
+                  const conditional = trial.conditional_function;
+                  const trialCopy = { ...trial };
+                  delete trialCopy.conditional_function;
+                  return { timeline: [trialCopy], conditional_function: conditional };
+                }
+                return trial;
+              });
+              const entry = { timeline: processedSequence };
+              if (repetitions > 1) entry.repetitions = repetitions;
+              if (onStartFn) entry.on_timeline_start = withRowContext(row, onStartFn);
+              if (onFinishFn) entry.on_timeline_finish = withRowContext(row, onFinishFn);
+              if (conditionalFn) entry.conditional_function = withRowContext(row, conditionalFn);
+              timeline.push(entry);
+            });
+            continue;
+          }
+          if (Array.isArray(block.timeline) && block.timeline.length) {
+            const blockName = block.name || null;
+            const sequence = compileTrialsSequence(block.timeline, map, null, globalVarNames, blockName);
+            if (!sequence.length) continue;
+            // Wrap each trial with conditional_function in its own timeline
+            const processedSequence = sequence.map(trial => {
+              if (typeof trial.conditional_function === 'function') {
+                // Extract conditional and remove it from trial
+                const conditional = trial.conditional_function;
+                const trialCopy = { ...trial };
+                delete trialCopy.conditional_function;
+                // Return timeline wrapper with conditional
+                return { timeline: [trialCopy], conditional_function: conditional };
+              }
+              return trial;
+            });
+            if (repetitions > 1 || onStartFn || onFinishFn || conditionalFn) {
+              const entry = { timeline: processedSequence };
+              if (repetitions > 1) entry.repetitions = repetitions;
+              if (onStartFn) entry.on_timeline_start = onStartFn;
+              if (onFinishFn) entry.on_timeline_finish = onFinishFn;
+              if (conditionalFn) entry.conditional_function = conditionalFn;
+              timeline.push(entry);
+            } else {
+              timeline.push(...processedSequence);
+            }
+            continue;
+          }
+          if (block.root) {
+            const sequence = compileNode(block.root, map, null, globalVarNames);
+            if (!sequence.length) continue;
+            if (repetitions > 1 || onStartFn || onFinishFn || conditionalFn) {
+              const entry = { timeline: sequence };
+              if (repetitions > 1) entry.repetitions = repetitions;
+              if (onStartFn) entry.on_timeline_start = onStartFn;
+              if (onFinishFn) entry.on_timeline_finish = onFinishFn;
+              if (conditionalFn) entry.conditional_function = conditionalFn;
+              timeline.push(entry);
+            } else {
+              timeline.push(...sequence);
+            }
+          }
+        }
+        return { timeline };
+      }
+
+      function runCustomJs(code, context) {
+        if (typeof code !== "string" || !code.trim()) return;
+        try {
+          const fn = new Function("jsPsych", "experiment", "timeline", code);
+          fn(context.jsPsych, context.experiment, context.timeline);
+        } catch (err) {
+          console.error("Custom experiment JavaScript failed", err);
+        }
+      }
+
+      function canAttemptOsfUpload() {
+        const origin = window.location.origin;
+        const protocol = window.location.protocol;
+        if (!protocol || protocol === "file:") return false;
+        if (origin === "null") return false;
+        return true;
+      }
+
+      function extractOsfProjectId(input) {
+        if (typeof input !== "string") return "";
+        let raw = input.trim();
+        if (!raw) return "";
+        try {
+          if (!/^https?:\/\//i.test(raw)) raw = `https://${raw}`;
+          const url = new URL(raw);
+          const host = url.hostname.toLowerCase();
+          const segments = url.pathname.split("/").map(part => part.trim()).filter(Boolean);
+          const takeFirst = () => {
+            const value = segments[0];
+            if (value && /^[a-z0-9]{4,10}$/i.test(value)) return value.toLowerCase();
+            return "";
+          };
+          if (host === "osf.io" || host.endsWith(".osf.io")) {
+            if (segments[0] && /^projects?$/i.test(segments[0])) segments.shift();
+            const candidate = takeFirst();
+            if (candidate) return candidate;
+          }
+          if (host === "api.osf.io") {
+            if (segments[0] && /^v2$/i.test(segments[0])) segments.shift();
+            if (segments[0] && /^(nodes|registrations)$/i.test(segments[0])) segments.shift();
+            const candidate = takeFirst();
+            if (candidate) return candidate;
+          }
+          if (host === "files.osf.io") {
+            if (segments[0] && /^v1$/i.test(segments[0])) segments.shift();
+            if (segments[0] && /^resources$/i.test(segments[0])) segments.shift();
+            const candidate = takeFirst();
+            if (candidate) return candidate;
+          }
+        } catch (err) {
+          // fall through to regex parsing
+        }
+        const regexes = [
+          /osf\.io\/(?:project[s]?\/)?([a-z0-9]{4,10})/i,
+          /api\.osf\.io\/v2\/(?:nodes|registrations)\/([a-z0-9]{4,10})/i,
+          /files\.osf\.io\/v1\/resources\/([a-z0-9]{4,10})/i
+        ];
+        for (const regex of regexes) {
+          const match = raw.match(regex);
+          if (match && match[1]) return match[1].toLowerCase();
+        }
+        return "";
+      }
+
+      async function readOsfError(response) {
+        if (!response || typeof response.text !== "function") return null;
+        try {
+          const clone = response.clone ? response.clone() : response;
+          const payload = await clone.text();
+          if (!payload) return null;
+          try {
+            const asJson = JSON.parse(payload);
+            if (asJson?.errors && Array.isArray(asJson.errors)) return asJson.errors;
+            return asJson;
+          } catch (err) {
+            return payload;
+          }
+        } catch (err) {
+          return null;
+        }
+      }
+
+      const savingOverlay = (() => {
+        let elements = null;
+
+        function ensure() {
+          if (elements) return elements;
+
+          if (!document.getElementById('builder-saving-spin-style')) {
+            const style = document.createElement('style');
+            style.id = 'builder-saving-spin-style';
+            style.textContent = '@keyframes builder-saving-spin { to { transform: rotate(360deg); } }';
+            document.head.appendChild(style);
+          }
+
+          const overlay = document.createElement('div');
+          overlay.id = 'builder-saving-overlay';
+          overlay.style.position = 'fixed';
+          overlay.style.inset = '0';
+          overlay.style.display = 'none';
+          overlay.style.alignItems = 'center';
+          overlay.style.justifyContent = 'center';
+          overlay.style.background = 'rgba(0, 0, 0, 0.85)';
+          overlay.style.color = '#ffffff';
+          overlay.style.flexDirection = 'column';
+          overlay.style.textAlign = 'center';
+          overlay.style.padding = '2rem';
+          overlay.style.zIndex = '10000';
+          overlay.style.gap = '1.5rem';
+          overlay.style.fontFamily = 'sans-serif';
+
+          const spinner = document.createElement('div');
+          spinner.className = 'builder-saving-spinner';
+          spinner.style.width = '48px';
+          spinner.style.height = '48px';
+          spinner.style.border = '4px solid rgba(255, 255, 255, 0.25)';
+          spinner.style.borderTopColor = '#60a5fa';
+          spinner.style.borderRadius = '50%';
+          spinner.style.animation = 'builder-saving-spin 1s linear infinite';
+
+          const messageEl = document.createElement('p');
+          messageEl.className = 'builder-saving-message';
+          messageEl.style.margin = '0';
+          messageEl.style.fontSize = '1.2rem';
+
+          const detailEl = document.createElement('p');
+          detailEl.className = 'builder-saving-detail';
+          detailEl.style.margin = '0';
+          detailEl.style.fontSize = '0.95rem';
+          detailEl.style.maxWidth = '26rem';
+          detailEl.style.opacity = '0.9';
+          detailEl.style.display = 'none';
+
+          const buttonEl = document.createElement('button');
+          buttonEl.type = 'button';
+          buttonEl.className = 'builder-saving-button';
+          buttonEl.style.display = 'none';
+          buttonEl.style.padding = '0.75rem 1.75rem';
+          buttonEl.style.fontSize = '1rem';
+          buttonEl.style.background = '#2563eb';
+          buttonEl.style.color = '#ffffff';
+          buttonEl.style.border = 'none';
+          buttonEl.style.borderRadius = '6px';
+          buttonEl.style.cursor = 'pointer';
+
+          overlay.append(spinner, messageEl, detailEl, buttonEl);
+          document.body.appendChild(overlay);
+
+          elements = { overlay, spinner, messageEl, detailEl, buttonEl };
+          return elements;
+        }
+
+        return {
+          showProgress(message) {
+            const { overlay, spinner, messageEl, detailEl, buttonEl } = ensure();
+            overlay.style.display = 'flex';
+            spinner.style.display = 'block';
+            messageEl.textContent = message || 'Saving your responses...';
+            detailEl.style.display = 'none';
+            detailEl.textContent = '';
+            buttonEl.style.display = 'none';
+            buttonEl.onclick = null;
+          },
+          showResult({ message, detail, buttonText, onButtonClick }) {
+            const { overlay, spinner, messageEl, detailEl, buttonEl } = ensure();
+            overlay.style.display = 'flex';
+            spinner.style.display = 'none';
+            messageEl.textContent = message || 'All set!';
+            if (detail && detail.trim()) {
+              detailEl.textContent = detail.trim();
+              detailEl.style.display = 'block';
+            } else {
+              detailEl.textContent = '';
+              detailEl.style.display = 'none';
+            }
+            if (buttonText) {
+              buttonEl.textContent = buttonText;
+              buttonEl.style.display = 'inline-flex';
+              buttonEl.onclick = onButtonClick || null;
+            } else {
+              buttonEl.style.display = 'none';
+              buttonEl.onclick = null;
+            }
+          },
+          hide() {
+            const { overlay, buttonEl } = ensure();
+            overlay.style.display = 'none';
+            buttonEl.onclick = null;
+          }
+        };
+      })();
+
+      async function uploadDataToOsf(jsPsychInstance, options) {
+        const hasCredentials = options.osfSave
+          && typeof options.osfProjectUrl === "string"
+          && options.osfProjectUrl.trim().length
+          && typeof options.osfApiToken === "string"
+          && options.osfApiToken.trim().length;
+
+        if (!hasCredentials) {
+          return { ok: true, skipped: true };
+        }
+
+        if (!canAttemptOsfUpload()) {
+          console.warn('OSF upload skipped: authenticated requests are blocked from this origin. Host the experiment over https:// (or http://) to enable OSF uploads.');
+          return { ok: false, error: new Error('OSF upload is not available from this environment.') };
+        }
+
+        try {
+          const csv = jsPsychInstance.data.get().csv();
+          const blob = new Blob([csv], { type: 'text/csv' });
+          let fileName = `jspsych-data-${Date.now()}.csv`;
+          const projectUrl = options.osfProjectUrl.trim();
+          const projectId = extractOsfProjectId(projectUrl);
+          const osfToken = options.osfApiToken.trim();
+          if (!projectId) {
+            console.warn('Could not determine OSF project id from', projectUrl);
+            return { ok: false, error: new Error('Could not determine OSF project id.') };
+          }
+
+          const baseHeaders = {
+            Authorization: `Bearer ${osfToken}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          };
+          const attemptInit = async targetName => {
+            const initUrl = `https://files.osf.io/v1/resources/${projectId}/providers/osfstorage/?kind=file&name=${encodeURIComponent(targetName)}`;
+            const response = await fetch(initUrl, {
+              method: 'PUT',
+              headers: {
+                Authorization: `Bearer ${osfToken}`
+              },
+              body: blob
+            });
+            const detail = response.ok ? null : await readOsfError(response);
+            return { response, detail, initUrl, name: targetName };
+          };
+
+          let uploadAttempt = await attemptInit(fileName);
+          if (!uploadAttempt.response.ok) {
+            const message = typeof uploadAttempt.detail === 'string'
+              ? uploadAttempt.detail
+              : JSON.stringify(uploadAttempt.detail ?? '');
+            const needsRename = uploadAttempt.response.status === 409
+              || (message && /already exists/i.test(message))
+              || (message && message.includes('Auth action must be'));
+            if (needsRename) {
+              const altName = `jspsych-data-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.csv`;
+              const retryAttempt = await attemptInit(altName);
+              if (retryAttempt.response.ok) {
+                uploadAttempt = retryAttempt;
+                fileName = altName;
+              } else {
+                uploadAttempt = retryAttempt;
+              }
+            }
+          }
+
+          if (!uploadAttempt.response.ok) {
+            console.warn('OSF upload failed with status', uploadAttempt.response.status);
+            const detail = uploadAttempt.detail;
+            if (detail) console.warn('OSF response body:', detail);
+            if (uploadAttempt.response.status === 401 || uploadAttempt.response.status === 403) {
+              console.warn('Check that your OSF API token is valid and includes osf.storage write access.');
+            } else if (uploadAttempt.response.status === 405) {
+              console.warn('Received 405 from OSF. Browsers sometimes block the required preflight request when running from local files; hosting the experiment over https:// usually resolves this.');
+            }
+            return { ok: false, error: new Error(`OSF upload failed with status ${uploadAttempt.response.status}.`) };
+          }
+
+          return { ok: true };
+        } catch (err) {
+          console.warn('Could not upload data to OSF.', err);
+          const message = err instanceof Error ? err.message : 'OSF upload failed unexpectedly.';
+          return { ok: false, error: new Error(message) };
+        }
+      }
+
+      // Blob URL caching system for Firebase Storage images
+      const blobUrlCache = new Map();
+      const blobObjectUrls = [];
+      const blobFunctionWrapperCache = new WeakMap();
+      const blobAwareTrials = new Set();
+
+      async function convertImageToBlob(url) {
+        try {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          return new Promise((resolve, reject) => {
+            img.onload = () => {
+              try {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth || img.width;
+                canvas.height = img.naturalHeight || img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                canvas.toBlob((blob) => {
+                  if (blob) {
+                    resolve(blob);
+                  } else {
+                    reject(new Error('Failed to convert to blob'));
+                  }
+                }, 'image/png');
+              } catch (err) {
+                reject(err);
+              }
+            };
+            img.onerror = () => {
+              const img2 = new Image();
+              img2.onload = () => {
+                try {
+                  resolve(null);
+                } catch (err) {
+                  reject(err);
+                }
+              };
+              img2.onerror = () => reject(new Error('Failed to load image'));
+              img2.src = url;
+            };
+            img.src = url;
+          });
+        } catch (err) {
+          console.warn('Failed to convert image to blob:', url, err);
+          return null;
+        }
+      }
+
+      async function preloadAndCacheAsBlob(urls) {
+        if (!Array.isArray(urls)) return;
+        for (const url of urls) {
+          if (typeof url !== 'string' || !url.trim()) continue;
+          if (blobUrlCache.has(url)) continue;
+          const blob = await convertImageToBlob(url);
+          if (blob) {
+            const blobUrl = URL.createObjectURL(blob);
+            blobUrlCache.set(url, blobUrl);
+            blobObjectUrls.push(blobUrl);
+          } else {
+            console.log('[Blob Cache] Could not create blob for', url, '- relying on browser cache');
+          }
+        }
+      }
+
+      function registerBlobAwareTrial(trial) {
+        if (!trial || typeof trial !== 'object') return;
+        blobAwareTrials.add(trial);
+      }
+
+      function applyBlobsToTrial(trial) {
+        if (!trial || typeof trial !== 'object') return;
+        for (const key in trial) {
+          if (key === 'type' || key === 'on_start' || key === 'on_finish' || key === 'on_load') continue;
+          const before = trial[key];
+          const after = replaceUrlsWithBlobs(before);
+          if (after !== before) {
+            trial[key] = after;
+          }
+        }
+      }
+
+      function applyBlobCacheToTrackedTrials() {
+        if (!blobUrlCache.size || !blobAwareTrials.size) return;
+        for (const trial of blobAwareTrials) {
+          applyBlobsToTrial(trial);
+        }
+      }
+
+      function wrapFunctionWithBlobReplacement(fn) {
+        if (typeof fn !== 'function') return fn;
+        if (blobFunctionWrapperCache.has(fn)) {
+          return blobFunctionWrapperCache.get(fn);
+        }
+        const wrapped = function (...args) {
+          const result = fn.apply(this, args);
+          if (result && typeof result.then === 'function') {
+            return result.then(res => replaceUrlsWithBlobs(res));
+          }
+          return replaceUrlsWithBlobs(result);
+        };
+        try {
+          Object.defineProperty(wrapped, '__blobWrapper', {
+            value: true,
+            enumerable: false,
+            configurable: true
+          });
+        } catch (err) {}
+        const propNames = Object.getOwnPropertyNames(fn);
+        for (const prop of propNames) {
+          if (prop === 'length' || prop === 'name' || prop === 'prototype') continue;
+          const descriptor = Object.getOwnPropertyDescriptor(fn, prop);
+          try {
+            Object.defineProperty(wrapped, prop, descriptor);
+          } catch (err) {
+            try {
+              wrapped[prop] = fn[prop];
+            } catch (err2) {}
+          }
+        }
+        const propSymbols = Object.getOwnPropertySymbols(fn);
+        for (const symbol of propSymbols) {
+          const descriptor = Object.getOwnPropertyDescriptor(fn, symbol);
+          try {
+            Object.defineProperty(wrapped, symbol, descriptor);
+          } catch (err) {
+            try {
+              wrapped[symbol] = fn[symbol];
+            } catch (err2) {}
+          }
+        }
+        blobFunctionWrapperCache.set(fn, wrapped);
+        blobFunctionWrapperCache.set(wrapped, wrapped);
+        return wrapped;
+      }
+
+      function replaceUrlsWithBlobs(value) {
+        if (typeof value === 'function') {
+          return wrapFunctionWithBlobReplacement(value);
+        }
+        if (typeof value === 'string') {
+          let result = value;
+          let replaced = false;
+          for (const [originalUrl, blobUrl] of blobUrlCache.entries()) {
+            // Try the original URL
+            if (result.includes(originalUrl)) {
+              result = result.split(originalUrl).join(blobUrl);
+              replaced = true;
+              console.log('[Blob Cache] Replaced with original URL');
+            }
+            // Also try with HTML-encoded ampersands (&amp; instead of &)
+            const htmlEncodedUrl = originalUrl.replace(/&/g, '&amp;');
+            if (result.includes(htmlEncodedUrl)) {
+              result = result.split(htmlEncodedUrl).join(blobUrl);
+              replaced = true;
+              console.log('[Blob Cache] Replaced with HTML-encoded URL');
+            }
+          }
+          if (replaced) {
+            console.log('[Blob Cache] Replaced URL in string');
+          }
+          return result;
+        }
+        if (Array.isArray(value)) {
+          return value.map(item => replaceUrlsWithBlobs(item));
+        }
+        if (value && typeof value === 'object') {
+          const replaced = {};
+          for (const key in value) {
+            replaced[key] = replaceUrlsWithBlobs(value[key]);
+          }
+          return replaced;
+        }
+        return value;
+      }
+
+      function wrapTimelineNodeForBlobs(node, depth = 0) {
+        if (!node || typeof node !== 'object') return node;
+        if (node.__blobTimelineWrapped) return node;
+        const wrapped = { ...node };
+        try {
+          Object.defineProperty(wrapped, '__blobTimelineWrapped', { value: true, enumerable: false });
+        } catch (err) {}
+        if (Array.isArray(wrapped.timeline)) {
+          wrapped.timeline = wrapped.timeline.map(child => wrapTimelineNodeForBlobs(child, depth + 1));
+        }
+        const isTrialNode = Object.prototype.hasOwnProperty.call(wrapped, 'type');
+        if (isTrialNode) {
+          const originalOnStart = wrapped.on_start;
+          registerBlobAwareTrial(wrapped);
+          wrapped.on_start = function(trial) {
+            if (blobUrlCache.size > 0 && trial && typeof trial === 'object') {
+              const depthLabel = depth === 0 ? 'root' : `depth-${depth}`;
+              console.log(`[Blob Cache] Trial starting (${depthLabel}), replacing URLs. Cache has`, blobUrlCache.size, 'entries');
+              console.log('[Blob Cache] Trial keys:', Object.keys(trial));
+              if (trial.stimulus) {
+                console.log('[Blob Cache] Has stimulus:', typeof trial.stimulus, trial.stimulus ? trial.stimulus.substring(0, 150) : 'empty');
+              }
+              for (const key in trial) {
+                if (key === 'type' || key === 'on_start' || key === 'on_finish' || key === 'on_load') continue;
+                const before = trial[key];
+                trial[key] = replaceUrlsWithBlobs(trial[key]);
+                if (before !== trial[key]) {
+                  console.log('[Blob Cache] Replaced in key:', key);
+                  if (key === 'stimulus') {
+                    console.log('[Blob Cache] Stimulus BEFORE:', typeof before === 'string' ? before.substring(0, 200) : before);
+                    console.log('[Blob Cache] Stimulus AFTER:', typeof trial[key] === 'string' ? trial[key].substring(0, 200) : trial[key]);
+                  }
+                }
+              }
+            }
+            if (typeof originalOnStart === 'function') {
+              return originalOnStart.call(this, trial);
+            }
+          };
+        }
+        return wrapped;
+      }
+
+      function wrapTimelineArrayForBlobs(timeline, depth = 0) {
+        if (!Array.isArray(timeline)) return timeline;
+        return timeline.map(node => wrapTimelineNodeForBlobs(node, depth));
+      }
+
+      function cleanupBlobUrls() {
+        for (const blobUrl of blobObjectUrls) {
+          try {
+            URL.revokeObjectURL(blobUrl);
+          } catch (err) {
+            console.warn('Failed to revoke blob URL:', err);
+          }
+        }
+        blobObjectUrls.length = 0;
+        blobUrlCache.clear();
+        blobAwareTrials.clear();
+      }
+
+      // Wait for all scripts to load before running
+      async function waitForScripts() {
+        return new Promise((resolve) => {
+          if (document.readyState === 'complete') {
+            resolve();
+          } else {
+            window.addEventListener('load', resolve);
+          }
+        });
+      }
+
+      (async () => {
+        await waitForScripts();
+        const options = experiment.options ?? {};
+        const rawCss = typeof options.rawCss === "string" ? options.rawCss : "";
+        const rawJs = typeof options.rawJs === "string" ? options.rawJs : "";
+        const headInjection = typeof options.headInjection === "string" ? options.headInjection : "";
+        const enforceFullscreen = !!options.fullscreen;
+        const allowMobile = !!options.allowMobile;
+
+        // Check for mobile device
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile && !allowMobile) {
+          document.body.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; background: #1a1a1a; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+              <div style="max-width: 500px; text-align: center;">
+                <h1 style="font-size: 1.5rem; margin-bottom: 1rem;">Desktop Required</h1>
+                <p style="color: #aaaaaa; line-height: 1.6;">This experiment requires a desktop or laptop computer. Please access this study from a non-mobile device.</p>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        // Initialize URL parameters BEFORE compilation so they're available in conditional functions
+        window.urlParams = {};
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams && Array.from(searchParams.keys()).length) {
+          const captured = {};
+          searchParams.forEach((value, key) => {
+            if (Object.prototype.hasOwnProperty.call(captured, key)) return;
+            const allValues = searchParams.getAll(key);
+            if (allValues.length > 1) {
+              captured[key] = allValues.join(",");
+            } else {
+              captured[key] = value ?? "";
+            }
+          });
+          if (Object.keys(captured).length) {
+            window.urlParams = captured;
+            // Also create individual global variables for each URL parameter
+            Object.keys(captured).forEach(key => {
+              window[key] = captured[key];
+            });
+          }
+        }
+
+        applyExperimentVariables(options.variables);
+
+        // Re-apply URL parameters AFTER experiment variables to ensure they take precedence
+        if (window.urlParams && Object.keys(window.urlParams).length > 0) {
+          console.log('[URL PARAMS] Re-applying URL parameters after experiment variables to ensure precedence');
+          Object.keys(window.urlParams).forEach(key => {
+            window[key] = window.urlParams[key];
+            console.log(`[URL PARAMS] Restored window.${key} =`, window[key]);
+          });
+        }
+
+        applyCustomCss(rawCss);
+        await injectCustomHead(headInjection);
+        const { timeline } = compileExperiment(experiment);
+        const hydratedTimeline = hydrate(timeline);
+
+        // Replace Firebase URLs with blob URLs in timeline before running
+        function applyBlobUrlReplacements(timeline) {
+          if (!timeline || blobUrlCache.size === 0) return timeline;
+          return replaceUrlsWithBlobs(timeline);
+        }
+
+        let handleFullscreenExit = () => {};
+        let handleFullscreenEnter = () => {};
+        const initJsPsychFn = GLOBAL_OBJECT.initJsPsych
+          || (GLOBAL_OBJECT.jsPsych && typeof GLOBAL_OBJECT.jsPsych.initJsPsych === "function" ? GLOBAL_OBJECT.jsPsych.initJsPsych : null);
+        if (typeof initJsPsychFn !== "function") {
+          throw new Error('initJsPsych is not available. Ensure jsPsych is loaded before running the experiment.');
+        }
+        const jsPsych = initJsPsychFn({
+          on_interaction_data_update(data) {
+            if (!enforceFullscreen) return;
+            if (data?.event === "fullscreenexit") {
+              handleFullscreenExit();
+            } else if (data?.event === "fullscreenenter") {
+              handleFullscreenEnter();
+            }
+          }
+        });
+        GLOBAL_OBJECT.__builderJsPsych = jsPsych;
+        if (!GLOBAL_OBJECT.jsPsych || typeof GLOBAL_OBJECT.jsPsych.timelineVariable !== "function") {
+          GLOBAL_OBJECT.jsPsych = jsPsych;
+        }
+        const originalEvaluateTimelineVariable = typeof jsPsych.evaluateTimelineVariable === "function"
+          ? jsPsych.evaluateTimelineVariable.bind(jsPsych)
+          : null;
+        jsPsych.evaluateTimelineVariable = function (key) {
+          const row = GLOBAL_OBJECT[ROW_CONTEXT_KEY];
+          if (row && Object.prototype.hasOwnProperty.call(row, key)) {
+            return row[key];
+          }
+          if (originalEvaluateTimelineVariable) {
+            return originalEvaluateTimelineVariable(key);
+          }
+          return undefined;
+        };
+        const originalTimelineVariable = typeof jsPsych.timelineVariable === "function"
+          ? jsPsych.timelineVariable.bind(jsPsych)
+          : null;
+        jsPsych.timelineVariable = function (key, execute = true) {
+          const row = GLOBAL_OBJECT[ROW_CONTEXT_KEY];
+          if (row && Object.prototype.hasOwnProperty.call(row, key)) {
+            if (execute === false) {
+              return () => jsPsych.timelineVariable(key);
+            }
+            return row[key];
+          }
+          if (originalTimelineVariable) {
+            return originalTimelineVariable(key, execute);
+          }
+          if (execute === false) {
+            return () => jsPsych.timelineVariable(key);
+          }
+          return undefined;
+        };
+        // Add URL parameters to jsPsych data
+        if (Object.keys(window.urlParams).length) {
+          jsPsych.data.addProperties(window.urlParams);
+        }
+        // Add global variables to data
+        if (Array.isArray(options.variables) && options.variables.length > 0) {
+          const globalVars = {};
+          options.variables.forEach(entry => {
+            const name = typeof entry?.name === "string" ? entry.name.trim() : "";
+            if (!name) return;
+            try {
+              if (Object.prototype.hasOwnProperty.call(GLOBAL_OBJECT, name)) {
+                globalVars[name] = GLOBAL_OBJECT[name];
+              }
+            } catch (err) {
+              // Skip if cannot access
+            }
+          });
+          if (Object.keys(globalVars).length) {
+            jsPsych.data.addProperties(globalVars);
+          }
+        }
+        if (enforceFullscreen) {
+          const OVERLAY_ID = "jspsych-fullscreen-guard";
+          let overlay = null;
+          let pausedForFullscreen = false;
+          const requestFullscreen = () => {
+            if (jsPsych?.pluginAPI?.requestFullscreen) {
+              jsPsych.pluginAPI.requestFullscreen(document.documentElement).catch(() => {});
+            } else if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(() => {});
+            }
+          };
+          const ensureOverlay = () => {
+            if (overlay) return overlay;
+            overlay = document.getElementById(OVERLAY_ID);
+            if (overlay) return overlay;
+            overlay = document.createElement('div');
+            overlay.id = OVERLAY_ID;
+            overlay.style.position = 'fixed';
+            overlay.style.inset = '0';
+            overlay.style.display = 'none';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            overlay.style.background = 'rgba(0, 0, 0, 0.88)';
+            overlay.style.zIndex = '9999';
+            overlay.style.color = '#ffffff';
+            overlay.style.textAlign = 'center';
+            overlay.style.padding = '2rem';
+            overlay.style.fontFamily = 'sans-serif';
+            overlay.style.flexDirection = 'column';
+            overlay.style.gap = '1.5rem';
+            const message = document.createElement('p');
+            message.textContent = 'Please return to fullscreen to continue the experiment.';
+            message.style.fontSize = '1.2rem';
+            message.style.margin = '0';
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = 'Return to fullscreen';
+            button.style.padding = '0.75rem 1.5rem';
+            button.style.fontSize = '1rem';
+            button.style.border = 'none';
+            button.style.borderRadius = '4px';
+            button.style.cursor = 'pointer';
+            button.style.background = '#4a90e2';
+            button.style.color = '#ffffff';
+            button.addEventListener('click', () => {
+              requestFullscreen();
+            });
+            overlay.append(message, button);
+            document.body.appendChild(overlay);
+            return overlay;
+          };
+          const showOverlay = () => {
+            const el = ensureOverlay();
+            el.style.display = 'flex';
+          };
+          const hideOverlay = () => {
+            if (overlay) overlay.style.display = 'none';
+          };
+          handleFullscreenExit = () => {
+            if (document.fullscreenElement) return;
+            if (!pausedForFullscreen) {
+              pausedForFullscreen = true;
+              try { jsPsych.pauseExperiment(); } catch (err) {}
+              showOverlay();
+            }
+            requestFullscreen();
+          };
+          handleFullscreenEnter = () => {
+            if (!pausedForFullscreen) return;
+            pausedForFullscreen = false;
+            hideOverlay();
+            try { jsPsych.resumeExperiment(); } catch (err) {}
+          };
+          document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+              handleFullscreenEnter();
+            } else {
+              handleFullscreenExit();
+            }
+          });
+        }
+
+        // Wrap timeline recursively to apply blob URL replacements before each trial
+        const finalTimeline = wrapTimelineArrayForBlobs(hydratedTimeline);
+
+        runCustomJs(rawJs, { jsPsych, experiment, timeline: finalTimeline });
+        await jsPsych.run(finalTimeline);
+
+        // Experiment finished - cleanup blob URLs
+        cleanupBlobUrls();
+
+        const shouldUploadOsf = options.osfSave
+          && typeof options.osfProjectUrl === "string"
+          && options.osfProjectUrl.trim().length
+          && typeof options.osfApiToken === "string"
+          && options.osfApiToken.trim().length;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasProlificPid = urlParams.has('PROLIFIC_PID');
+        const hasSonaId = urlParams.has('survey_code') || urlParams.has('SONAID');
+        const redirectCandidates = [];
+
+        // Add SONA redirect if enabled and SONAID is in URL
+        if (options.sona && options.sonaExperimentId && options.sonaCreditToken && hasSonaId) {
+          const sonaId = urlParams.get('survey_code') || urlParams.get('SONAID') || '';
+          if (sonaId) {
+            const creditUrl = `https://sydneypsych.sona-systems.com/webstudy_credit.aspx?experiment_id=${options.sonaExperimentId}&credit_token=${options.sonaCreditToken}&survey_code=${sonaId}&id=${sonaId}`;
+            redirectCandidates.push({
+              url: creditUrl,
+              type: 'sona',
+              buttonText: 'Return to SONA to confirm credit'
+            });
+          }
+        }
+
+        // Add Prolific redirect if enabled and PROLIFIC_PID is in URL
+        if (options.prolific && typeof options.prolificRedirectCode === "string" && options.prolificRedirectCode.trim().length && hasProlificPid) {
+          const redirectCode = encodeURIComponent(options.prolificRedirectCode.trim());
+          redirectCandidates.push({
+            url: `https://app.prolific.com/submissions/complete?cc=${redirectCode}`,
+            type: 'prolific',
+            buttonText: 'Complete study on Prolific'
+          });
+        }
+
+        // Select redirect: prioritize based on which URL parameter is present
+        let redirectTarget = null;
+        if (redirectCandidates.length > 0) {
+          // If both are available, prioritize Prolific if PROLIFIC_PID is present, otherwise SONA
+          if (hasProlificPid) {
+            redirectTarget = redirectCandidates.find(r => r.type === 'prolific') || redirectCandidates[0];
+          } else if (hasSonaId) {
+            redirectTarget = redirectCandidates.find(r => r.type === 'sona') || redirectCandidates[0];
+          } else {
+            redirectTarget = redirectCandidates[0];
+          }
+        }
+
+        const triggerLocalSave = () => {
+          if (!options.localSave) return;
+          try {
+            jsPsych.data.get().localSave('csv', 'my_experiment_data.csv');
+          } catch (err) {
+            console.warn('Could not save data locally.', err);
+          }
+        };
+
+        if (shouldUploadOsf) {
+          savingOverlay.showProgress('Saving your responses...');
+          const osfResult = await uploadDataToOsf(jsPsych, options);
+          triggerLocalSave();
+          const hasSaveError = !osfResult?.ok;
+          const successMessage = redirectTarget
+            ? 'Your responses have been saved.'
+            : 'Your responses have been saved. You may close this window.';
+          const errorMessage = redirectTarget
+            ? 'We could not confirm that your responses were saved. Please contact the researcher before continuing.'
+            : 'We could not confirm that your responses were saved. Please contact the researcher.';
+          const message = hasSaveError ? errorMessage : successMessage;
+          const detail = hasSaveError ? '' : (redirectTarget ? 'Click the button below to finish.' : '');
+          const buttonText = redirectTarget ? redirectTarget.buttonText : 'Close';
+          savingOverlay.showResult({
+            message,
+            detail,
+            buttonText,
+            onButtonClick: () => {
+              if (redirectTarget) {
+                window.location.href = redirectTarget.url;
+              } else {
+                savingOverlay.hide();
+              }
+            }
+          });
+        } else {
+          triggerLocalSave();
+          if (redirectTarget) {
+            window.location.href = redirectTarget.url;
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
